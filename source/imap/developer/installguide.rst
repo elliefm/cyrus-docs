@@ -39,7 +39,7 @@ Setting up dependencies
     
 2. Install dependencies for master branch
     * ``sudo apt-get install libjansson-dev libxml2-dev libsqlite3-dev libical-dev libsasl2-dev libssl-dev libopendkim-dev libcunit1-dev libpcre3-dev uuid-dev``
-    
+
 3. Additional dependencies for cyrus-imapd-2.5: you'll need the ``-dev`` package to match whichever version of libdb you already have installed (assuming it's probably already installed). I needed ``libdb5.3-dev`` on debian 8.0, but ``libdb5.1-dev`` on 7.8.
 
 .. _steps 1-3: https://help.github.com/articles/generating-ssh-keys/
@@ -51,7 +51,7 @@ Setting up dependencies
 Compile Cyrus
 ---------------
 
-::
+.. code-block:: bash
 
     cd /path/to/cyrus-imapd
     
@@ -67,7 +67,7 @@ Compile Cyrus
 
     make check
     
-    make install
+    make install  # optional if you're just developing on this machine
 
 The ``--prefix`` option sets where Cyrus is installed to. Adjust to suit.
     
@@ -97,25 +97,63 @@ Install and configure Cassandane
 
 .. code-block:: bash
 
-    sudo apt-get install libtest-unit-perl libconfig-inifiles-perl libdatetime-perl libbsd-resource-perl \
-      libxml-generator-perl libencode-imaputf7-perl libio-stringy-perl libnews-nntpclient-perl \
-      libfile-chdir-perl libnet-server-perl libunix-syslog-perl
+    sudo apt-get install libtest-unit-perl libconfig-inifiles-perl \
+        libdatetime-perl libbsd-resource-perl libxml-generator-perl \
+        libencode-imaputf7-perl libio-stringy-perl libnews-nntpclient-perl \
+        libfile-chdir-perl libnet-server-perl libunix-syslog-perl \
+        libdata-uuid-perl libjson-xs-perl libdata-ical-perl libjson-perl \
+        libdatetime-format-ical-perl libtext-levenshteinxs-perl \
+        libmime-types-perl libdatetime-format-iso8601-perl libcal-dav-perl \
+        libclone-perl
 
-3. Compile and install Cassandane
+There are a number of Perl modules required that aren't already packages in the standard repository. A few aren't in CPAN yet and should be installed from github.
+
+.. code-block:: bash
+
+    git clone https://github.com/brong/Net-DAVTalk/
+    cd Net-DAVTalk
+    perl Makefile.PL
+    make
+    sudo make install
+    cd ..
+
+    git clone https://github.com/brong/Net-CardDAVTalk/
+    cd Net-CardDAVTalk
+    perl Makefile.PL
+    make
+    sudo make install
+    cd ..
+
+    git clone https://github.com/brong/Net-CalDAVTalk/
+    cd Net-CalDAVTalk
+    perl Makefile.PL
+    make
+    sudo make install
+    cd ..
+
+    git clone https://github.com/brong/Mail-JMAPTalk/
+    cd Mail-JMAPTalk
+    perl Makefile.PL
+    make
+    sudo make install
+    cd ..
+
+The quickest option for the rest is installing via CPAN, but you could build packages using dh-make-perl if that is preferred.
+
+.. code-block:: bash
+
+    sudo cpan -i Tie::DataUUID
+    sudo cpan -i XML::Spice
+    sudo cpan -i XML::Fast
+    sudo cpan -i Data::ICal::TimeZone
+    sudo cpan -i Text::VCardFast
+
+3. Install Cassandane
 
 .. code-block:: bash
 
     cd /path/to/cassandane
-
-    autoreconf -vi
-
-    ./configure
-
     make
-
-    make check
-
-    sudo make install
 
 4. Copy ``cassandane.ini.example`` to ``cassandane.ini``
 
@@ -154,7 +192,7 @@ Running cassandane tests:
 .. code-block:: bash
 
     cd /path/to/cassandane
-    ./testrunner.pl -f pretty -j 8
+    sudo -u cyrus ./testrunner.pl -f pretty -j 8
 
 Read the script to see other options. If you're having problems, add more ``-v`` options to the testrunner to get more info out.
 
