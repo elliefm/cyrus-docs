@@ -1,8 +1,12 @@
 """
-    sphinxlocal.writers.cyrusman
+    sphinxlocal.roles.cyrusman
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     Turn :cyrusman: links into manpage references to the cyrus imap doc tree
+    
+    Config: use 'cyrus_man_url_regex' to set the location for generated links. Defaults to http://docs.cyrus.foundation/imap/admin/%s/%s.html
+    
+    If :cyrusman: references are missing the section number, it die with an error.
 
     :version: 0.1
     :author: Nicola Nye <nicolan@fastmail.com>
@@ -11,28 +15,26 @@
     :license: BSD, see LICENSE for details.
 """
 
+from sphinx.errors import SphinxError
 from docutils import nodes, utils
 from docutils.parsers.rst.roles import set_classes
 from string import Template
 import re
 
+
 def make_link_node(rawtext, app, name, manpage_num, options):
     """Create a link to a man page.
     """
+#   These section names map to directory names. ie: section 8 will generate a url to 'commands'
     sections = ['general','system','library','special','configs','games','misc','commands']
     manpage_section = sections[int(manpage_num)-1]
-    urlname = None
-    if manpage_num == '5':
-        urlname= name + ".conf"
-    else:
-        urlname = name
     ref = None
     ref = app.config.cyrus_man_url_regex
     if not ref:
-        ref = "http://docs.cyrus.foundation/imap/admin/%s/%s.html" % (manpage_section, urlname)
+        ref = "http://docs.cyrus.foundation/imap/admin/%s/%s.html" % (manpage_section, name)
     else:
         s = Template(ref)     
-        ref = s.substitute(num=manpage_section, topic=urlname)
+        ref = s.substitute(num=manpage_section, topic=name)
     set_classes(options)
     node = nodes.reference(rawtext, "%s(%s)" % (name, manpage_num), refuri=ref,
                            **options)
@@ -42,12 +44,15 @@ def make_link_node(rawtext, app, name, manpage_num, options):
 def man_role(name, rawtext, text, lineno, inliner, options={}, content=[]):
     """Link to an online man page issue.
     """
-    app = inliner.document.settings.env.app
-    p = re.compile("([a-zA-Z0-9_\.-_]+)\((\d)\)")
+    env = inliner.document.settings.env
+    app = env.app
+    p = re.compile("(?P<name>[a-zA-Z0-9_\.-_]+)(\((?P<section>\d)\))?")
     m = p.match(text)
-
-    manpage_num = m.group(2)
-    name = m.group(1)
+    if (m.group('section')):
+        manpage_num = m.group('section')
+    else:
+        raise CyrusManExtension(env.docname+': '+str(lineno)+": Missing man page section for \'"+text+"\'.")
+    name = m.group('name')
     node = make_link_node(rawtext, app, name, manpage_num, options)
     return [node], []
 
@@ -56,3 +61,6 @@ def setup(app):
     app.add_role('cyrusman', man_role)
     app.add_config_value('cyrus_man_url_regex', None, 'env')
     return
+
+class CyrusManExtension(SphinxError):
+        category = ':cyrusman: error'
