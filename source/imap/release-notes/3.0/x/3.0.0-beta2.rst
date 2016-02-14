@@ -69,11 +69,22 @@ Major changes
 
 *   ``cyradm`` changes FIXME copy from 2.5.6 release notes
 
+*   FIXME something about specialuse changes
+
+*   FIXME imipnotifier
+
+*   FIXME crc32 optimisation
+
+*   FIXME objectstorage
+
+*   FIXME uidl_format imapd.conf option
 
 Significant bugfixes
 ====================
 
 .. *   Lots of fixes to caldav and carddav.
+
+*   ^ and more of these
 
 ..     Includes the addition of a new daemon (calalarmd) which periodically processes a global
     database containing the "next" alarm for each item, and sends the relevant mboxevents.
