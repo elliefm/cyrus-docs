@@ -73,7 +73,8 @@ Major changes
 
 *   FIXME uidl_format imapd.conf option
 
-*   Added experimental backup service.  See FIXME
+*   Added experimental backup service.  See ``docs/install-backup.html`` in the source
+    distribution for preliminary installation/configuration/administration documentation.
 
 *   FIXME    sieve: support RFC5490 - mailbox and metadata
 
