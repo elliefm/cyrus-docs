@@ -79,6 +79,17 @@ Major changes
 
 *   FIXME uidl_format imapd.conf option
 
+*   Added experimental backup service.  See FIXME
+
+*   FIXME    sieve: support RFC5490 - mailbox and metadata
+
+*   FIXME outbox_sendlater, notify_at
+
+*   FIXME reverse ACLs 1e0c277
+
+*   FIXME crossdomain d46db86
+
+
 Significant bugfixes
 ====================
 
@@ -110,6 +121,7 @@ Unsorted
 
 77d3a53 sort: add 'spamscore' key - also search spamabove/spambelow
 f239ee6 mboxlist: only keep 20 most recent deleted mailboxes for any particular name
+f390123 imapd: davdrive magic
 
 
 .. _Xapian: http://xapian.org
