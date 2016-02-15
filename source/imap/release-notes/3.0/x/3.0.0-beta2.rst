@@ -60,14 +60,8 @@ Major changes
 *   Added support for replicating mailboxes/users to a particular partition.  ``sync_client``
     now accepts a ``-p`` option.
 
-*   Improvements to idled (thanks Thomas Jarosch)
-
 *   The ``defaultdomain`` setting in :ref:`imapd.conf <imap-admin-configs-imapd.conf>`
     now defaults to "internal" (was: NULL)
-
-*   ``tls_required`` FIXME copy from 2.5.6 release notes
-
-*   ``cyradm`` changes FIXME copy from 2.5.6 release notes
 
 *   FIXME something about specialuse changes
 
